@@ -20,6 +20,7 @@ export default function App() {
       </div>
     </div>
 
+    <Modal visibility={visible} setVisible={setVisible} />
     
 
     <div className="grid grid-cols-3 gap-5 m-10 ">
@@ -33,9 +34,7 @@ export default function App() {
       <Task visibility={visible}/>
       <Task visibility={visible}/>
     </div>
-      
-     
-    <Modal visibility={visible} setVisible={setVisible} />
+    
     </>
   )
 }
