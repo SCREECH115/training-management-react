@@ -1,5 +1,32 @@
+import { useState, useEffect } from 'react';
+
 const Task = ({visibility}) => {
- return (
+ 
+   const [tasks, setTasks] = useState([])
+
+   useEffect( async () => {
+      try {
+         const response = await fetch('http://localhost:3000/tasks', {
+            method: 'GET',
+            headers: {
+               'Content-Type': 'application/json',
+               'Accept': 'application/json'
+            }
+         });
+
+      const data = await response.json();
+      
+      console.log(data);
+      console.log(data.map((data) => data.place))
+
+      } catch (error) {
+         console.log(error);
+      }
+   }, [])
+
+ 
+
+   return (
    <>
    
          <div className={visibility ? "flex justify-center blur-sm" : "flex justify-center"}>

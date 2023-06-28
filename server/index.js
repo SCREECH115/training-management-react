@@ -1,10 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser')
+const cors = require('cors')
 const app = express();
-const jsonParser = bodyParser.json();
-const urlencodedParser = bodyParser.urlencoded({extended:false}) 
 const port = 3000;
 const mysql = require('mysql');
+
 
 
 // parse application/x-www-form-urlencoded
@@ -12,6 +12,9 @@ app.use(bodyParser.urlencoded({ extended: false }))
 
 // parse application/json
 app.use(bodyParser.json())
+
+// Cors
+app.use(cors())
 
 const connection = mysql.createConnection({
    host: 'localhost',
