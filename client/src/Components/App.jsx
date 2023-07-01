@@ -1,10 +1,32 @@
 import Modal from "./Modal"
 import Task from "./Task"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 export default function App() {
 
   const [visible, setVisible] = useState(false)
+  const [tasks, setTasks] = useState([])
+
+  useEffect( () => {
+    const getTasks = async () => {
+       try {
+          const response = await fetch('http://localhost:3000/tasks', {
+             method: 'GET',
+             headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+             }
+          });
+
+       const data = await response.json();
+       setTasks(data);
+
+       } catch (error) {
+          console.error(error);
+       }
+    }
+    getTasks();
+ }, [])
 
   return (
     <>
@@ -21,20 +43,12 @@ export default function App() {
     </div>
 
     <Modal visibility={visible} setVisible={setVisible} />
-    
 
     <div className="grid grid-cols-3 gap-5 m-10 ">
-      <Task visibility={visible} />
-      <Task visibility={visible}/>
-      <Task visibility={visible}/>
-      <Task visibility={visible}/>
-      <Task visibility={visible}/>
-      <Task visibility={visible}/>
-      <Task visibility={visible}/>
-      <Task visibility={visible}/>
-      <Task visibility={visible}/>
+      {tasks.map((task) => {
+      return <Task key={task.id} data={task} visibility={visible}  />        
+      })}
     </div>
-    
     </>
   )
 }

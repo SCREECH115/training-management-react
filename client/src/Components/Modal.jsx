@@ -1,41 +1,4 @@
-import { useReducer } from "react"
-
 const Modal = ({visibility, setVisible, task}) => {
-
-   const reducer = (state, action) => {
-      switch (action.type) {
-         case 'name':
-            return {...state, name: action.payload}
-         case 'date':
-            return {...state, date: action.payload}
-         case 'hour':
-            return {...state, hour: action.payload}
-         case 'duration':
-            return {...state, duration: action.payload}
-         case 'place':
-            return {...state, place: action.payload}
-         case 'cost':
-            return {...state, cost: action.payload}
-         case 'description':
-            return {...state, description: action.payload}
-         default:
-            return state
-      }
-   }
-
-   const [state, dispatch] = useReducer(reducer, {
-      name: '',
-      date: '',
-      hour: '',
-      duration: '',
-      place: '',
-      cost: '',
-      description: ''
-   })
-
-   const handleChange = (e) => {
-      dispatch({type: e.target.name, payload: e.target.value})
-   }
 
    const input = 'w-3/4 p-2 mb-2 border-2 border-gray-400 rounded-lg'
 
