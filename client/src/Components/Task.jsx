@@ -1,3 +1,6 @@
+import Button from '@mui/material/Button';
+
+
 const formatDate = (date) => {
    const day = date.getDate();
    const month = date.getMonth() + 1;
@@ -75,7 +78,8 @@ const Task = ({visibility, data}) => {
 
 
                <div className="flex justify-center mt-5">
-                  <button className="px-4 py-2 mt-4 text-white bg-green-500 rounded-lg shadow-[0px_5px_15px_5px_#00000024] hover:bg-green-600 transition-all ease-in-out duration-300">Zapisz się</button>
+                  <Button className="px-4 py-2 mt-4 text-white bg-green-500 rounded-lg shadow-[0px_5px_15px_5px_#00000024] hover:bg-green-600 transition-all ease-in-out duration-300" variant='contained' color='success'>Dołącz</Button>
+
                </div>
 
             </div>
