@@ -4,8 +4,9 @@ const cors = require('cors')
 const app = express();
 const port = 3000;
 const mysql = require('mysql');
-
-
+const {v4: uuidv4} = require('uuid');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -24,14 +25,6 @@ const connection = mysql.createConnection({
 })
 
 connection.connect();
-
-// LOGIN
-app.get('/users', (req, res) => {
-   connection.query('SELECT * FROM users', (err, rows, fields) => {
-      if(err) throw err;
-      res.json(rows)
-   })
-})
 
 // GET TASKS
 app.get('/tasks', (req, res) => {
@@ -90,6 +83,55 @@ app.post("/addTask", (req, res) => {
       console.log(results);
       res.json({id:results.insertId});
    })
+})
+
+// SIGNUP
+app.post('/signup', (req, res) => {
+   const {login, password} = req.body;
+   const hashedPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+
+   try {
+      const signUp = connection.query(
+         `INSERT INTO users (login, password) values (?, ?)`, [login, hashedPassword]
+      );
+
+      const token = jwt.sign({email}, "secret", {expiresIn: "1hr"});
+
+      res.json({email, token})
+   }
+      catch(err){
+         if (err) {
+            res.json({ detail: err.detail });
+          }
+         throw new err;
+      }
+})
+
+// LOGIN
+app.post('/login',  (req, res) => {
+   const {login, password} = req.body;
+
+   try{
+      const users = connection.query("SELECT * FROM users WHERE login = ?", [
+         login,
+       ]);
+      
+      if (!users.rows) return res.json({ detail: "User does not exist" });
+
+      const succes = bcrypt.compare(
+         password,
+         users.rows[0].password
+      );
+      const token = jwt.sign({login}, "secret", {expiresIn: "1hr"});
+
+      if (succes){
+         res.json({email: users.row[0].email, token});
+      } else {
+         res.json({detail: "Login failed"})
+      }
+   } catch (err) {
+      console.error(err);
+   }
 })
 
 app.listen(port, () => {
