@@ -25,6 +25,14 @@ const connection = mysql.createConnection({
 
 connection.connect();
 
+// LOGIN
+app.get('/users', (req, res) => {
+   connection.query('SELECT * FROM users', (err, rows, fields) => {
+      if(err) throw err;
+      res.json(rows)
+   })
+})
+
 // GET TASKS
 app.get('/tasks', (req, res) => {
    connection.query('SELECT * FROM tasks', (err, rows, fields) => {

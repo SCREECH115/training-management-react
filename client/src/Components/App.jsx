@@ -2,6 +2,7 @@ import Modal from "./Modal"
 import Task from "./Task"
 import { useState, useEffect } from "react"
 import Button from '@mui/material/Button';
+import Login from "./Login";
 
 const formatDate = (date) => {
   const day = date.getDate();
@@ -41,7 +42,8 @@ export default function App() {
  }, [])
 
   return (
-    <>
+  <>
+    <Login /> 
     <div className={visible ? "blur-sm opacity-25 transition-opacity duration-500" : "transition-opacity duration-500"}>
       <div className="flex justify-center mt-6 text-2xl bg-gray-800">
         <h1 className="flex font-bold uppercase text-white p-6 m-1 text-4xl select-none">
@@ -58,9 +60,9 @@ export default function App() {
 
     <div className="grid desktop:grid-cols-3 gap-5 m-10 laptop:grid-cols-2 tablet:grid-cols-1">
       {tasks.map((task) => {
-      return <Task key={task.id} data={task} visibility={visible} setTasks={setTasks} setEditTask={setEditTask} setVisible={setVisible}/>        
+        return <Task key={task.id} data={task} visibility={visible} setTasks={setTasks} setEditTask={setEditTask} setVisible={setVisible}/>        
       })}
     </div>
-    </>
+  </>  
   )
 }
