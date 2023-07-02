@@ -56,7 +56,7 @@ export default function App() {
 
     <Modal visibility={visible} setVisible={setVisible} setTasks={setTasks} setEditTask={setEditTask} editTask={editTask} />
 
-    <div className="grid grid-cols-3 gap-5 m-10 ">
+    <div className="grid desktop:grid-cols-3 gap-5 m-10 laptop:grid-cols-2 tablet:grid-cols-1">
       {tasks.map((task) => {
       return <Task key={task.id} data={task} visibility={visible} setTasks={setTasks} setEditTask={setEditTask} setVisible={setVisible}/>        
       })}
