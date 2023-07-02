@@ -3,10 +3,18 @@ import Task from "./Task"
 import { useState, useEffect } from "react"
 import Button from '@mui/material/Button';
 
+const formatDate = (date) => {
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear();
+  return `${year}-${month < 10 ? `0${month}` : `${month}`}-${day < 10 ? `0${day}` : `${day}`}`;
+}
+
 export default function App() {
 
   const [visible, setVisible] = useState(false)
-  const [tasks, setTasks] = useState([])
+  const [tasks, setTasks] = useState([]) 
+  const [editTask, setEditTask] = useState(null)
 
   useEffect( () => {
     const getTasks = async () => {
@@ -20,7 +28,10 @@ export default function App() {
           });
 
        const data = await response.json();
-       setTasks(data);
+       setTasks(data.map((task) => {
+        return {...task , date: formatDate(new Date(task.date))}
+        })
+        );
 
        } catch (error) {
           console.error(error);
@@ -31,9 +42,9 @@ export default function App() {
 
   return (
     <>
-    <div className={visible ? "blur-sm" : ""}>
+    <div className={visible ? "blur-sm opacity-25 transition-opacity duration-500" : "transition-opacity duration-500"}>
       <div className="flex justify-center mt-6 text-2xl bg-gray-800">
-        <h1 className="flex font-bold uppercase text-white p-6 m-1 text-4xl">
+        <h1 className="flex font-bold uppercase text-white p-6 m-1 text-4xl select-none">
           Training Tasks
         </h1>
       </div>
@@ -43,11 +54,11 @@ export default function App() {
       </div>
     </div>
 
-    <Modal visibility={visible} setVisible={setVisible} />
+    <Modal visibility={visible} setVisible={setVisible} setTasks={setTasks} setEditTask={setEditTask} editTask={editTask} />
 
     <div className="grid grid-cols-3 gap-5 m-10 ">
       {tasks.map((task) => {
-      return <Task key={task.id} data={task} visibility={visible}  />        
+      return <Task key={task.id} data={task} visibility={visible} setTasks={setTasks} setEditTask={setEditTask} setVisible={setVisible}/>        
       })}
     </div>
     </>

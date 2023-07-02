@@ -33,11 +33,32 @@ app.get('/tasks', (req, res) => {
    })
 });
 
+// EDIT TASK
+app.patch('/editTask', (req, res) => {
+   const {id, title, date, time, duration, place, price, description} = req.body;
+
+   if (!(title && date && time && duration && place && price && description)){
+      res.sendStatus(400);
+      return;
+   }
+
+   connection.query('UPDATE tasks SET title = ?, date = ?, time = ?, duration = ?, place = ?, price = ?, description = ? WHERE id = ?', [title, date, time, duration, place, price, description, id], (err, results, fields) => {
+      if (err) {
+         res.sendStatus(500)
+         throw err;
+      }
+      res.sendStatus(200);
+   })
+})
+
 // DELETE TASK
 app.delete('/deleteTask', (req, res) => {
    const {id} = req.body;
-   connection.query('DELETE FROM tasks where id = 1', (err, results, fields) => {
-      if (err) throw err;
+   connection.query('DELETE FROM tasks where id = ?', [id], (err, results, fields) => {
+      if (err) {
+         res.sendStatus(500);
+         throw err;
+      };
       res.sendStatus(200);
    })
 })
@@ -45,21 +66,21 @@ app.delete('/deleteTask', (req, res) => {
 // ADD TASK
 app.post("/addTask", (req, res) => {
 
-   const {date, time, duration, place, price, description} = req.body;
+   const {title, date, time, duration, place, price, description} = req.body;
 
-   if (!(date && time && duration && place && price && description)){
+   if (!(title && date && time && duration && place && price && description)){
       res.sendStatus(400);
       return;
    }
 
-   connection.query('INSERT INTO tasks (date, time, duration, place, price, description) VALUES(?, ?, ?, ?, ?, ?)', [date, time, duration, place, price, description],(err, results, fields) => {
+   connection.query('INSERT INTO tasks (title, date, time, duration, place, price, description) VALUES(?, ?, ?, ?, ?, ?, ?)', [title, date, time, duration, place, price, description],(err, results, fields) => {
       if (err) {
          res.sendStatus(500);
          throw err
       };
 
       console.log(results);
-      res.sendStatus(201);
+      res.json({id:results.insertId});
    })
 })
 
